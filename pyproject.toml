@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# This section contains metadata about your project.
+[project]
+name = "TaskDB"
+version = "0.1.0"
+authors = [
+  { name="Brittany Gates", email="bcgates82@gmail.com" },
+]
+description = "A CLI to-do list tracking tasks in a database."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "psycopg2-binary",
+    "python-dotenv",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# This is the key part for creating the command-line script.
+[project.scripts]
+taskdb = "taskdb.cli:main"
