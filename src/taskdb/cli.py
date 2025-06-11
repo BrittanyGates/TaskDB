@@ -23,9 +23,11 @@ def get_db_connection():
         )
         return connection
     except psycopg2.OperationalError as error:
-        print(f"Error: Could not connect to the database. Have you run the setup script in database.py?", file=sys.stderr)
+        print(f"Error: Could not connect to the database. Have you run the setup script in database.py?",
+              file=sys.stderr)
         print(f"Details: {error}", file=sys.stderr)
-        sys.exit(1) # Exit if we can't connect
+        sys.exit(1)  # Exit if we can't connect
+
 
 def list_all_tasks() -> tuple[str, str] | str | None:
     """Lists all the tasks in the database.
@@ -35,12 +37,12 @@ def list_all_tasks() -> tuple[str, str] | str | None:
     try:
         with connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT task_id, task FROM tasks ORDER BY task_id;")
+                cursor.execute("SELECT task_id, task, task_status FROM tasks ORDER BY task_id;")
                 tasks = cursor.fetchall()
                 if not tasks:
                     print("No tasks found.")
-                for task_id, task in tasks:
-                    print(f"Task ID: {task_id} | {task}")
+                for task_id, task, task_status in tasks:
+                    print(f"Task ID: {task_id} | {task} | Task Status: {task_status}")
     except psycopg2.Error as error:
         print(f"Error listing all the tasks in the database: {error}.", file=sys.stderr)
     finally:
@@ -83,10 +85,34 @@ def delete_task(task_id: int) -> str | None:
                 else:
                     print(f"Task \"{task_id}\" successfully deleted from the database!")
     except psycopg2.Error as error:
-        print(f"Error adding {task_id} to the database: {error}.", file=sys.stderr)
+        print(f"Error deleting {task_id} from the database: {error}.", file=sys.stderr)
     finally:
         if connection:
             connection.close()
+
+
+def add_task_status(task_id: int, task_status: str) -> str | None:
+    """Adds the status to a task via its ID.
+    :param task_id: The ID number of the task as an int.
+    :param task_status: The task's status (STARTED or COMPLETED)
+    :return: A string showing the task deleted from the database successfully, or None.
+    """
+    connection = get_db_connection()
+    task_status_query = "UPDATE tasks SET task_status = %s WHERE task_id = %s;"
+    try:
+        with connection:
+            with connection.cursor() as cursor:
+                cursor.execute(task_status_query, (task_status.upper(), task_id))
+                if cursor.rowcount == 0:
+                    print(f"Error: No task found with ID \"{task_id}\".")
+                else:
+                    print(f"Successfully added a status to Task \"{task_id}\" to {task_status.upper()}")
+    except psycopg2.Error as error:
+        print(f"Error adding a status to Task {task_id}: {error}.", file=sys.stderr)
+    finally:
+        if connection:
+            connection.close()
+
 
 def main():
     """Main entry point for the CLI application.
@@ -103,6 +129,13 @@ def main():
         try:
             task_id_to_delete: int = int(args.task_id)
             delete_task(task_id_to_delete)
+        except ValueError:
+            print(f"Error: Task ID must be an integer. You provided: '{args.task_id}'")
+    elif args.command_name == "status":
+        try:
+            task_id_status_to_add: int = int(args.task_id)
+            new_status: str = args.status_value
+            add_task_status(task_id_status_to_add, new_status)
         except ValueError:
             print(f"Error: Task ID must be an integer. You provided: '{args.task_id}'")
     else:

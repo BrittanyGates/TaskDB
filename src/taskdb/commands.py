@@ -17,6 +17,12 @@ add_parser.add_argument("task_description", help="Description about the task to 
 delete_parser: parser = subparsers.add_parser("delete", help="Delete a task")
 delete_parser.add_argument("task_id", help="The task ID to delete")
 
+task_status_parser: parser = subparsers.add_parser("status", help="Add a status to a task.")
+task_status_parser.add_argument("task_id", help="The task ID to delete")
+task_status_parser.add_argument("status_value",
+                                choices=["started", "completed"],
+                                help="The new status of a task (started or completed)")
+
 # Options
 parser.add_argument("--lall", "--listall", dest="command_name", action="store_true",
                     help="List all the tasks in the database")

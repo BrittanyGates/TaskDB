@@ -160,7 +160,7 @@ if __name__ == "__main__":
             TASKDB_PASSWORD,
             TASKDB_HOST,
             TASKDB_PORT,
-            "../../data/schema.sql"
+            "../data/schema.sql"
         )
     else:
         print(f"\nDatabase creation for \"{TASKDB_NAME}\" failed. Cannot apply schema.")

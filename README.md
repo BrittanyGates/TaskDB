@@ -9,8 +9,19 @@ database to keep your tasks organized and persistent.
 
 * Add new tasks to your to-do list.
 * Delete tasks by their ID.
+* Add a status to your tasks.
 * List all current tasks.
 * All data is stored in a PostgreSQL database.
+
+---
+
+## Version History
+
+* 0.1.1
+    * Added the `task_status` command.
+        * Users can add either a `STARTED` or `COMPLETED` status to their tasks.
+* 0.1.0
+    * Initial release
 
 ---
 
@@ -24,7 +35,7 @@ Before you begin, ensure you have the following installed on your system:
 
 ---
 
-## Installation & Setup
+## Initial Installation & Setup
 
 Follow these steps to get the TaskDB application up and running on your local machine.
 
@@ -94,7 +105,28 @@ do this once.
 
 ---
 
-## Usage
+## Database Migration Instructions
+
+Follow these steps if you installed version 0.1.0 previously.
+
+First, clone this repository to your local machine using Git:
+
+`git clone` https://github.com/BrittanyGates/TaskDB.git
+
+Then change directory into the TaskDB directory:
+
+`cd TaskDB`
+
+Run the following command from the project's root directory:
+
+`python src/migrations/001_add_task_status_column.py`
+
+You should see output indicating that the database was updated and the schema was applied successfully. You only need to
+do this once.
+
+---
+
+## Usage Instructions
 
 Once installed and configured, you can use taskdb from your terminal.
 
@@ -111,6 +143,10 @@ Once installed and configured, you can use taskdb from your terminal.
 ### Delete a task by its ID
 
 `taskdb delete 1`
+
+### Add a status to a task by its ID
+
+`taskdb status 1 "started"` or `taskdb status 5 "completed"`
 
 ### View the help menu
 
