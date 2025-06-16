@@ -17,6 +17,8 @@ database to keep your tasks organized and persistent.
 
 ## Version History
 
+* 0.1.2
+    * Users can display tasks according to their status.
 * 0.1.1
     * Added the `task_status` command.
         * Users can add either a `STARTED` or `COMPLETED` status to their tasks.
@@ -133,6 +135,14 @@ Once installed and configured, you can use taskdb from your terminal.
 ### List all tasks
 
 `taskdb --lall` or `taskdb --listall`
+
+### List all tasks with a "Started" status
+
+`taskdb --s` or `taskdb --started`
+
+### List all tasks with a "Completed" status
+
+`taskdb --c` or `taskdb --completed`
 
 ### Add a new task
 
