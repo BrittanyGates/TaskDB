@@ -26,25 +26,37 @@ def get_db_connection():
         print(f"Error: Could not connect to the database. Have you run the setup script in database.py?",
               file=sys.stderr)
         print(f"Details: {error}", file=sys.stderr)
-        sys.exit(1)  # Exit if we can't connect
+        sys.exit(1)
 
 
-def list_all_tasks() -> tuple[str, str] | str | None:
-    """Lists all the tasks in the database.
-    :return: A tuple containing both the task and its ID number, a string showing the error, or None.
+def list_tasks(status_filter: str | None = None):
+    """Lists tasks from the database.
+    :param status_filter: An optional status ('STARTED', 'COMPLETED') to filter tasks by.
     """
     connection = get_db_connection()
+
+    query = "SELECT task_id, task, task_status FROM tasks"
+    parameters = []
+
+    if status_filter:
+        query += " WHERE task_status = %s"
+        parameters.append(status_filter)
+
+    query += " ORDER BY task_id;"
+
     try:
         with connection:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT task_id, task, task_status FROM tasks ORDER BY task_id;")
+                cursor.execute(query, parameters)
                 tasks = cursor.fetchall()
                 if not tasks:
-                    print("No tasks found.")
+                    print("No tasks found matching that criteria.")
                 for task_id, task, task_status in tasks:
-                    print(f"Task ID: {task_id} | {task} | Task Status: {task_status}")
+                    # Provide a default status for display if it's None in the DB
+                    status_display = task_status if task_status else "Not Started"
+                    print(f"Task ID: {task_id} | {task} | Task Status: {status_display}")
     except psycopg2.Error as error:
-        print(f"Error listing all the tasks in the database: {error}.", file=sys.stderr)
+        print(f"Error listing tasks: {error}.", file=sys.stderr)
     finally:
         if connection:
             connection.close()
@@ -121,8 +133,12 @@ def main():
     """
     args = commands.args
 
-    if args.command_name is True:
-        list_all_tasks()
+    if args.command_name == "lall":
+        list_tasks()
+    elif args.command_name == "s":
+        list_tasks("STARTED")
+    elif args.command_name == "c":
+        list_tasks("COMPLETED")
     elif args.command_name == "add":
         add_task(args.task_description)
     elif args.command_name == "delete":

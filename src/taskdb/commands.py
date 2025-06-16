@@ -24,7 +24,13 @@ task_status_parser.add_argument("status_value",
                                 help="The new status of a task (started or completed)")
 
 # Options
-parser.add_argument("--lall", "--listall", dest="command_name", action="store_true",
+parser.add_argument("--lall", "--listall", dest="command_name", action="store_const", const="lall",
                     help="List all the tasks in the database")
+
+parser.add_argument("--s", "--started", dest="command_name", action="store_const", const="s",
+                    help="List all tasks with a STARTED status")
+
+parser.add_argument("--c", "--completed", dest="command_name", action="store_const", const="c",
+                    help="List all tasks with a COMPLETED status")
 
 args: parser = parser.parse_args()
