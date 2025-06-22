@@ -63,12 +63,12 @@ def list_tasks(status_filter: str | None = None):
 
 
 def add_task(description: str) -> str | None:
-    """Adds a task to the database.
+    """Adds a task, along with the current date and time of the end user's computer, to the database.
     :param description: A string of the task's description.
     :return: A string showing the task added to the database successfully, or None.
     """
     connection = get_db_connection()
-    add_query: str = "INSERT INTO tasks (task) VALUES (%s);"
+    add_query: str = "INSERT INTO tasks (task, task_date_and_time) VALUES (%s, now());"
     try:
         with connection:
             with connection.cursor() as cursor:
@@ -104,13 +104,13 @@ def delete_task(task_id: int) -> str | None:
 
 
 def add_task_status(task_id: int, task_status: str) -> str | None:
-    """Adds the status to a task via its ID.
+    """Adds the status, along with the current date and time of the end user's computer, to a task via its ID.
     :param task_id: The ID number of the task as an int.
     :param task_status: The task's status (STARTED or COMPLETED)
     :return: A string showing the task deleted from the database successfully, or None.
     """
     connection = get_db_connection()
-    task_status_query = "UPDATE tasks SET task_status = %s WHERE task_id = %s;"
+    task_status_query = "UPDATE tasks SET task_status = %s, task_status_date_and_time = now() WHERE task_id = %s;"
     try:
         with connection:
             with connection.cursor() as cursor:
@@ -120,7 +120,7 @@ def add_task_status(task_id: int, task_status: str) -> str | None:
                 else:
                     print(f"Successfully added a status to Task \"{task_id}\" to {task_status.upper()}")
     except psycopg2.Error as error:
-        print(f"Error adding a status to Task {task_id}: {error}.", file=sys.stderr)
+        print(f"Error adding a status to Task ID {task_id}: {error}.", file=sys.stderr)
     finally:
         if connection:
             connection.close()
