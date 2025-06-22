@@ -17,6 +17,8 @@ database to keep your tasks organized and persistent.
 
 ## Version History
 
+* 0.1.3
+    * Adds the current date and time whenever users add a task or update a task's status.
 * 0.1.2
     * Users can display tasks according to their status.
 * 0.1.1
@@ -109,7 +111,7 @@ do this once.
 
 ## Database Migration Instructions
 
-Follow these steps if you installed version 0.1.0 previously.
+Follow these steps if you installed version before 0.1.3 previously.
 
 First, clone this repository to your local machine using Git:
 
@@ -119,9 +121,11 @@ Then change directory into the TaskDB directory:
 
 `cd TaskDB`
 
-Run the following command from the project's root directory:
+Run the following commands from the project's root directory:
 
 `python src/migrations/001_add_task_status_column.py`
+
+`python src/migrations/002_add_date_and_time_columns.py`
 
 You should see output indicating that the database was updated and the schema was applied successfully. You only need to
 do this once.
