@@ -17,6 +17,11 @@ database to keep your tasks organized and persistent.
 
 ## Version History
 
+* 0.1.4
+  * Users can now update a task's description with the 'update' command.
+  * Added an `--task-num` option to the `delete`, 'status', and 'update' commands.
+  * Users can reset an in-progress task's status using the "Not Started" argument.
+  * When listing all tasks the program now displays both the added date of the task along with its modified date. 
 * 0.1.3
     * Adds the current date and time whenever users add a task or update a task's status.
 * 0.1.2
@@ -148,6 +153,10 @@ Once installed and configured, you can use taskdb from your terminal.
 
 `taskdb --c` or `taskdb --completed`
 
+### List all tasks with a "Not Started" status
+
+`taskdb --n` or `taskdb --not-started`
+
 ### Add a new task
 
 (Make sure to use quotes around your task description.)
@@ -156,11 +165,14 @@ Once installed and configured, you can use taskdb from your terminal.
 
 ### Delete a task by its ID
 
-`taskdb delete 1`
+`taskdb delete --task-num=1`
 
 ### Add a status to a task by its ID
 
-`taskdb status 1 "started"` or `taskdb status 5 "completed"`
+`taskdb status --task-num=1 "started"` or `taskdb status --task-num=2 "completed"` or `taskdb status --task-num=3 "not started"`
+
+### Update a task by its ID
+`taskdb update --task-num1 "Updated task description"`
 
 ### View the help menu
 
